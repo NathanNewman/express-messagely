@@ -4,7 +4,17 @@ const ExpressError = require("../expressError");
 
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
+/** User class for message.ly */
+
+
+
+/** User of the site. */
+
 class User {
+
+  /** register new user -- returns
+   *    {username, password, first_name, last_name, phone}
+   */
 
   static async register({ username, password, first_name, last_name, phone }) {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
@@ -24,6 +34,8 @@ class User {
     return result.rows[0];
   }
 
+  /** Authenticate: is this username/password valid? Returns boolean. */
+
   static async authenticate(username, password) {
     const result = await db.query(
       "SELECT password FROM users WHERE username = $1",
@@ -33,6 +45,8 @@ class User {
 
     return user && (await bcrypt.compare(password, user.password));
   }
+
+  /** Update last_login_at for user */
 
   static async updateLoginTimestamp(username) {
     const result = await db.query(
@@ -48,6 +62,9 @@ class User {
     }
   }
 
+  /** All: basic info on all users:
+   * [{username, first_name, last_name, phone}, ...] */
+
   static async all() {
     const result = await db.query(
       `SELECT username,
@@ -59,6 +76,15 @@ class User {
     );
     return result.rows;
   }
+
+  /** Get: get user by username
+   *
+   * returns {username,
+   *          first_name,
+   *          last_name,
+   *          phone,
+   *          join_at,
+   *          last_login_at } */
 
   static async get(username) {
     const result = await db.query(
@@ -79,6 +105,14 @@ class User {
 
     return result.rows[0];
   }
+
+  /** Return messages from this user.
+   *
+   * [{id, to_user, body, sent_at, read_at}]
+   *
+   * where to_user is
+   *   {username, first_name, last_name, phone}
+   */
 
   static async messagesFrom(username) {
     const result = await db.query(
@@ -109,6 +143,14 @@ class User {
       read_at: m.read_at,
     }));
   }
+
+  /** Return messages to this user.
+   *
+   * [{id, from_user, body, sent_at, read_at}]
+   *
+   * where from_user is
+   *   {username, first_name, last_name, phone}
+   */
 
   static async messagesTo(username) {
     const result = await db.query(

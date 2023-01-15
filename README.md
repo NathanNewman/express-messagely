@@ -1,0 +1,1 @@
+This project only contains backend programming, but it's for a messaging site. It was written in Express Node.js. It features include user singup, login, and logout as well as messaging from user to user. The project uses middleware for authenication. It also includes Jest testing.

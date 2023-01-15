@@ -10,12 +10,7 @@ const DB_URI =
     : "postgresql:///messagely";
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret";
-
-const BCRYPT_WORK_FACTOR = 12;
-
-// const SECRET_KEY = process.env.SECRET_KEY;
-
-// const BCRYPT_WORK_FACTOR = process.env.BCRYPT_WORK_FACTOR;
+const BCRYPT_WORK_FACTOR = parseInt(process.env.BCRYPT_WORK_FACTOR);
 
 module.exports = {
   DB_URI,
